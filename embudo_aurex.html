@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AUREX</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#000; font-family:Arial,sans-serif; min-height:100vh; }
+
+.p { display:none; min-height:100vh; width:100%; flex-direction:column; justify-content:center; align-items:center; background:#000; padding:30px 20px; }
+.p.on { display:flex; }
+
+/* P1 */
+#p1 { background:radial-gradient(ellipse at center,#0d1a00 0%,#000 70%); }
+#p1 img.logo { width:200px; margin-bottom:24px; }
+#p1 h1 { color:#fff; font-size:26px; font-weight:900; text-align:center; line-height:1.3; margin-bottom:16px; text-transform:uppercase; }
+#p1 h1 span { color:#A8E63D; }
+#p1 .vol { color:#D4A843; font-size:13px; letter-spacing:3px; margin-bottom:30px; text-transform:uppercase; }
+#p1 button.main { background:#A8E63D; color:#000; font-weight:900; font-size:17px; padding:18px 0; width:90%; max-width:360px; border:none; border-radius:60px; cursor:pointer; box-shadow:0 0 25px rgba(168,230,61,0.5); margin-bottom:16px; }
+#p1 .skip { color:#444; font-size:12px; cursor:pointer; text-decoration:underline; }
+
+/* VIDEOS */
+.vid-pantalla { padding:0; background:#000; justify-content:flex-start; }
+.vid-container { width:100%; background:#000; }
+.vid-container video { width:100%; max-height:65vh; object-fit:contain; background:#000; display:block; }
+.vimeo-wrap { width:100%; position:relative; padding-bottom:56.25%; height:0; overflow:hidden; }
+.vimeo-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+.yt-wrap { width:100%; position:relative; padding-bottom:56.25%; height:0; overflow:hidden; }
+.yt-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+.vid-bottom { width:100%; padding:20px; background:#000; display:flex; flex-direction:column; align-items:center; gap:14px; }
+.vid-texto { color:#A8E63D; font-size:16px; font-weight:700; text-align:center; animation:blink 2s infinite; }
+.vid-btn { display:none; background:#A8E63D; color:#000; font-weight:900; font-size:16px; padding:16px 0; width:90%; max-width:340px; border:none; border-radius:60px; cursor:pointer; }
+.vid-btn.visible { display:block; animation:aparecer 0.5s ease; }
+@keyframes aparecer { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* P3 LLAMADA */
+#p3 { background:linear-gradient(160deg,#061206 0%,#000 60%); gap:0; }
+#p3 .top { color:#555; font-size:11px; letter-spacing:3px; text-transform:uppercase; margin-bottom:40px; }
+#p3 .avatar { width:130px; height:130px; border-radius:50%; border:3px solid #A8E63D; object-fit:cover; margin-bottom:18px; animation:glow 2s infinite; }
+#p3 .nombre { color:#fff; font-size:20px; font-weight:700; text-align:center; margin-bottom:8px; }
+#p3 .estado { color:#A8E63D; font-size:13px; letter-spacing:2px; margin-bottom:50px; animation:blink 1.5s infinite; }
+#p3 .btn-call { width:80px; height:80px; border-radius:50%; background:#25D366; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; animation:ringBtn 1.2s infinite; margin-bottom:12px; }
+#p3 .btn-call svg { width:38px; height:38px; fill:#fff; }
+#p3 .inst { color:#555; font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-top:8px; }
+
+/* MODAL */
+#modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.93); z-index:999; flex-direction:column; justify-content:center; align-items:center; padding:30px; }
+#modal.on { display:flex; }
+.modal-box { background:#111; border:2px solid #A8E63D; border-radius:20px; padding:32px 24px; max-width:340px; width:100%; text-align:center; }
+.modal-icon { font-size:48px; margin-bottom:16px; }
+.modal-box h3 { color:#fff; font-size:22px; font-weight:900; margin-bottom:12px; line-height:1.3; }
+.modal-box h3 span { color:#A8E63D; }
+.modal-box p { color:#888; font-size:14px; line-height:1.6; margin-bottom:28px; }
+.btn-si { background:#A8E63D; color:#000; font-weight:900; font-size:16px; padding:16px 0; width:100%; border:none; border-radius:60px; cursor:pointer; margin-bottom:12px; box-shadow:0 0 20px rgba(168,230,61,0.4); }
+.btn-no { background:transparent; color:#555; font-size:14px; padding:10px 0; width:100%; border:1px solid #333; border-radius:60px; cursor:pointer; }
+
+/* P7 CTA */
+#p7 { background:radial-gradient(ellipse at center,#0d1a00 0%,#000 70%); text-align:center; padding:40px 24px; }
+#p7 .cta-emoji { font-size:60px; margin-bottom:20px; animation:pulsar 1.5s infinite; }
+@keyframes pulsar { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+#p7 h2 { color:#fff; font-size:28px; font-weight:900; line-height:1.2; margin-bottom:16px; text-transform:uppercase; }
+#p7 h2 span { color:#A8E63D; }
+#p7 .cta-sub { color:#888; font-size:15px; line-height:1.7; max-width:300px; margin:0 auto 16px; }
+#p7 .cta-linea { width:60px; height:2px; background:#A8E63D; margin:0 auto 24px; }
+#p7 .cta-puntos { text-align:left; width:90%; max-width:320px; margin-bottom:32px; }
+#p7 .cta-puntos p { color:#ccc; font-size:14px; line-height:1.8; padding:6px 0; border-bottom:1px solid #111; }
+#p7 .cta-puntos p span { color:#A8E63D; font-weight:700; margin-right:8px; }
+#p7 button.cta-btn { background:#A8E63D; color:#000; font-weight:900; font-size:18px; padding:20px 0; width:90%; max-width:360px; border:none; border-radius:60px; cursor:pointer; animation:brillar 2s infinite; }
+@keyframes brillar { 0%,100%{box-shadow:0 0 20px rgba(168,230,61,0.4)} 50%{box-shadow:0 0 40px rgba(168,230,61,0.8)} }
+#p7 .cta-nota { color:#444; font-size:12px; margin-top:14px; }
+
+/* P8 WHATSAPP */
+#p8 { background:#000; }
+#p8 img.logo8 { width:150px; margin-bottom:24px; }
+#p8 h2 { color:#fff; font-size:22px; font-weight:900; text-align:center; line-height:1.3; margin-bottom:12px; }
+#p8 h2 span { color:#A8E63D; }
+#p8 .sub { color:#777; font-size:14px; line-height:1.7; text-align:center; max-width:300px; margin-bottom:16px; }
+#p8 .zoom-info { background:#111; border:1px solid #A8E63D; border-radius:12px; padding:16px 20px; margin-bottom:24px; width:90%; max-width:340px; text-align:center; }
+#p8 .zoom-info p { color:#A8E63D; font-size:13px; font-weight:700; margin-bottom:4px; }
+#p8 .zoom-info span { color:#555; font-size:12px; }
+#p8 a.wa { display:flex; align-items:center; justify-content:center; gap:10px; background:#25D366; color:#000; font-weight:900; font-size:16px; padding:18px 0; width:90%; max-width:360px; border-radius:60px; text-decoration:none; margin-bottom:14px; box-shadow:0 4px 20px rgba(37,211,102,0.3); }
+#p8 .nota { color:#333; font-size:12px; text-align:center; }
+
+/* ANIMACIONES */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes glow { 0%{box-shadow:0 0 0 0 rgba(168,230,61,0.5)} 70%{box-shadow:0 0 0 20px rgba(168,230,61,0)} 100%{box-shadow:0 0 0 0 rgba(168,230,61,0)} }
+@keyframes ringBtn { 0%{box-shadow:0 0 0 0 rgba(37,211,102,0.8)} 70%{box-shadow:0 0 0 35px rgba(37,211,102,0)} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0)} }
+</style>
+</head>
+<body>
+
+<!-- SONIDO LLAMADA -->
+<audio id="ring" loop preload="auto">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2002/2002-preview.mp3" type="audio/mpeg">
+  <source src="https://assets.mixkit.co/active_storage/sfx/214/214-preview.mp3" type="audio/mpeg">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" type="audio/mpeg">
+</audio>
+
+<!-- P1 -->
+<div class="p on" id="p1">
+  <img class="logo" src="https://static.wixstatic.com/media/65b318_401f56e7ba754c898c7c38a9f4dd129c~mv2.png/v1/crop/x_289,y_320,w_973,h_353/fill/w_564,h_204,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/65b318_401f56e7ba754c898c7c38a9f4dd129c~mv2.png" alt="AUREX">
+  <h1>¿Estás listo para ver<br>cómo funciona<br><span>el dinero digital?</span></h1>
+  <div class="vol">🔊 Sube el volumen</div>
+  <button class="main" onclick="ir('p2')">ENTRAR A LA EXPERIENCIA →</button>
+  <span class="skip" onclick="ir('p3')">Ya conozco AUREX — ir directo</span>
+</div>
+
+<!-- P2 VIDEO WIX 5 SEG -->
+<div class="p vid-pantalla" id="p2">
+  <div class="vid-container">
+    <video id="vidWix" playsinline webkit-playsinline preload="auto">
+      <source src="https://video.wixstatic.com/video/65b318_95d93cb0e673487e8ae01377efb67715/720p/mp4/file.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="vid-bottom">
+    <div class="vid-texto">Mira esto con atención 👀</div>
+    <button class="vid-btn" id="btn2" onclick="ir('p3')">CONTINUAR →</button>
+  </div>
+</div>
+
+<!-- P3 LLAMADA -->
+<div class="p" id="p3">
+  <div class="top">📱 Llamada entrante</div>
+  <img class="avatar"
+    src="https://static.wixstatic.com/media/65b318_b605f32a38894653a151bb1d571bd37e~mv2.png"
+    alt="AUREX"
+    onerror="this.src='https://static.wixstatic.com/media/65b318_401f56e7ba754c898c7c38a9f4dd129c~mv2.png/v1/fill/w_200,h_200/65b318_401f56e7ba754c898c7c38a9f4dd129c~mv2.png'">
+  <div class="nombre">AUREX — Información exclusiva</div>
+  <div class="estado">● LLAMADA ENTRANTE...</div>
+  <button class="btn-call" onclick="contestar()">
+    <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+  </button>
+  <div class="inst">☝️ toca para contestar</div>
+  <div style="margin-top:22px;background:#A8E63D;color:#000;font-weight:900;font-size:15px;padding:14px 28px;border-radius:60px;text-align:center;letter-spacing:1px;animation:brillar 2s infinite;cursor:pointer;" onclick="contestar()">📲 CONTESTA PARA CONTINUAR</div>
+  <div style="color:#666;font-size:12px;margin-top:12px;text-align:center;">Pulsa el botón verde o el de arriba</div>
+</div>
+
+<!-- P4 VIMEO 1 -->
+<div class="p vid-pantalla" id="p4">
+  <div class="vid-container">
+    <div class="vimeo-wrap" id="vimeo1Wrap"></div>
+  </div>
+  <div class="vid-bottom">
+    <div class="vid-texto">¿Esto te generó algo? 👇</div>
+    <button class="vid-btn" id="btn4" onclick="mostrarModal()">QUIERO AVANZAR →</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-box">
+    <div class="modal-icon">🍋</div>
+    <h3>¿Estás listo para<br><span>transformar tu situación?</span></h3>
+    <p>Lo que viste es real. Las personas que avanzan son las que deciden actuar hoy — no mañana.</p>
+    <button class="btn-si" onclick="confirmar()">✅ SÍ — DESEO AVANZAR</button>
+    <button class="btn-no" onclick="cerrarModal()">Necesito más tiempo</button>
+  </div>
+</div>
+
+<!-- P5 VIMEO 2 -->
+<div class="p vid-pantalla" id="p5">
+  <div class="vid-container">
+    <div class="vimeo-wrap" id="vimeo2Wrap"></div>
+  </div>
+  <div class="vid-bottom">
+    <div class="vid-texto">¿Listo para el siguiente paso? 👇</div>
+    <button class="vid-btn" id="btn5" onclick="irP6()">SEGUIR AVANZANDO →</button>
+  </div>
+</div>
+
+<!-- P6 VIDEO YOUTUBE FINAL -->
+<div class="p vid-pantalla" id="p6">
+  <div class="vid-container">
+    <div class="yt-wrap" id="ytWrap"></div>
+  </div>
+  <div class="vid-bottom">
+    <div class="vid-texto">Última parte — no te la pierdas 🔥</div>
+    <button class="vid-btn" id="btn6" onclick="ir('p7')">ESTOY LISTO →</button>
+  </div>
+</div>
+
+<!-- P7 CTA -->
+<div class="p" id="p7">
+  <div class="cta-emoji">🍋</div>
+  <h2>¿Estás listo para<br><span>posicionarte hoy?</span></h2>
+  <div class="cta-linea"></div>
+  <div class="cta-sub">Llegaste hasta aquí porque algo en ti sabe que esto es diferente. El momento es ahora.</div>
+  <div class="cta-puntos">
+    <p><span>✅</span>Empresa europea con 7 años de trayectoria</p>
+    <p><span>✅</span>Sistema que trabaja contigo 24/7</p>
+    <p><span>✅</span>Comunidad que te apoya desde el día 1</p>
+    <p><span>✅</span>Primer beneficio con solo 3 posiciones</p>
+    <p><span>✅</span>Activación única — sin mensualidades</p>
+  </div>
+  <button class="cta-btn" onclick="ir('p8')">🚀 SÍ — QUIERO POSICIONARME</button>
+  <div class="cta-nota">El espacio que no tomas hoy, alguien más lo toma mañana</div>
+</div>
+
+<!-- P8 WHATSAPP -->
+<div class="p" id="p8">
+  <img class="logo8" src="https://static.wixstatic.com/media/65b318_401f56e7ba754c898c7c38a9f4dd129c~mv2.png/v1/crop/x_289,y_320,w_973,h_353/fill/w_564,h_204,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/65b318_401f56e7ba754c898c7c38a9f4dd129c~mv2.png" alt="AUREX">
+  <h2>Un paso más<br><span>y estás adentro</span></h2>
+  <div class="sub">Escríbele ahora a tu guía AUREX para agendar tu lugar en el próximo Zoom en vivo.</div>
+  <div class="zoom-info">
+    <p>📅 Zoom en vivo — Lunes a Jueves</p>
+    <span>Escríbenos y te confirmamos el horario de hoy</span>
+  </div>
+  <a class="wa" id="waBtn" href="#" target="_blank">📲 AGENDAR MI LUGAR EN EL ZOOM</a>
+  <div class="nota">Sin compromiso — solo información clara para que tú decidas</div>
+</div>
+
+<script>
+var vimeo1Listo = false;
+var vimeo2Listo = false;
+var ytListo = false;
+var audioCtxCreado = false;
+
+// WhatsApp personalizado por URL
+function configurarWA() {
+  var params = new URLSearchParams(window.location.search);
+  var wa = params.get('wa') || '525579444892';
+  var nombre = params.get('nombre') || 'AUREX';
+  var msg = encodeURIComponent('Hola ' + nombre + ', vi toda la presentación de AUREX y estoy listo para avanzar. ¿A qué hora es el Zoom hoy?');
+  document.getElementById('waBtn').href = 'https://wa.me/' + wa + '?text=' + msg;
+}
+configurarWA();
+
+function amplificarAudio(audio) {
+  if(!audioCtxCreado) {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var src = ctx.createMediaElementSource(audio);
+      var gain = ctx.createGain();
+      gain.gain.value = 3.0;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      audioCtxCreado = true;
+    } catch(e) {}
+  }
+}
+
+function insertarVimeo(wrapId, videoId) {
+  var wrap = document.getElementById(wrapId);
+  wrap.innerHTML = '';
+  var iframe = document.createElement('iframe');
+  iframe.src = 'https://player.vimeo.com/video/' + videoId + '?autoplay=1&title=0&byline=0&portrait=0&controls=0&dnt=1';
+  iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+  iframe.allowFullscreen = true;
+  iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
+  wrap.appendChild(iframe);
+}
+
+function insertarYouTube() {
+  if(ytListo) return;
+  var wrap = document.getElementById('ytWrap');
+  wrap.innerHTML = '';
+  var iframe = document.createElement('iframe');
+  iframe.src = 'https://www.youtube.com/embed/zEPqyM3AGYM?autoplay=1&rel=0&modestbranding=1';
+  iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+  iframe.allowFullscreen = true;
+  iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
+  wrap.appendChild(iframe);
+  ytListo = true;
+  mostrarBoton('btn6', 60);
+}
+
+function mostrarBoton(btnId, seg) {
+  setTimeout(function() {
+    var btn = document.getElementById(btnId);
+    if(btn) btn.classList.add('visible');
+  }, seg * 1000);
+}
+
+function ir(id) {
+  document.querySelectorAll('.p').forEach(function(el){ el.classList.remove('on'); });
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+
+  var ring = document.getElementById('ring');
+  var vid = document.getElementById('vidWix');
+
+  if(id === 'p2') {
+    if(ring) ring.pause();
+    if(vid) {
+      vid.currentTime = 0;
+      vid.play().catch(function(){ vid.muted=true; vid.play(); });
+      vid.onended = function() {
+        document.getElementById('btn2').classList.add('visible');
+      };
+      mostrarBoton('btn2', 6);
+    }
+  }
+
+  if(id === 'p3') {
+    if(vid) vid.pause();
+    if(ring) {
+      amplificarAudio(ring);
+      ring.currentTime = 0;
+      ring.volume = 1.0;
+      ring.play().catch(function(){});
+    }
+  }
+
+  if(id !== 'p2' && id !== 'p3') {
+    if(ring) { ring.pause(); ring.currentTime=0; }
+    if(vid) vid.pause();
+  }
+}
+
+function contestar() {
+  var ring = document.getElementById('ring');
+  if(ring){ ring.pause(); ring.currentTime=0; }
+  if(!vimeo1Listo) {
+    insertarVimeo('vimeo1Wrap', '1185298839');
+    vimeo1Listo = true;
+    mostrarBoton('btn4', 174);
+  }
+  ir('p4');
+}
+
+function mostrarModal() {
+  document.getElementById('modal').classList.add('on');
+}
+
+function cerrarModal() {
+  document.getElementById('modal').classList.remove('on');
+}
+
+function confirmar() {
+  cerrarModal();
+  if(!vimeo2Listo) {
+    insertarVimeo('vimeo2Wrap', '1185332935');
+    vimeo2Listo = true;
+    mostrarBoton('btn5', 194);
+  }
+  ir('p5');
+}
+
+function irP6() {
+  insertarYouTube();
+  ir('p6');
+}
+</script>
+</body>
+</html>
