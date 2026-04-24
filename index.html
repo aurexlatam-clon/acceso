@@ -1,0 +1,103 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AUREX</title>
+
+<style>
+body{margin:0;background:#000;color:#fff;font-family:sans-serif;overflow:hidden}
+.p{display:none;position:fixed;top:0;left:0;width:100%;height:100%;justify-content:center;align-items:center;flex-direction:column}
+.p.on{display:flex}
+button{padding:15px 20px;font-weight:bold;cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<!-- P0 -->
+<div class="p on" id="p0">
+<h1>HAY MOMENTOS QUE DEFINEN</h1>
+<h2 style="color:#A8E63D">ESTE ES UNO DE ELLOS</h2>
+<button onclick="ir('p1')">ENTRAR →</button>
+</div>
+
+<!-- P1 -->
+<div class="p" id="p1">
+<video id="v5seg" playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;">
+<source src="https://video.wixstatic.com/video/65b318_819c279c41c74e88a9fa8d15318948be/1080p/mp4/file.mp4">
+</video>
+</div>
+
+<!-- P2 -->
+<div class="p" id="p2">
+<h2>¿ESTÁS LISTO?</h2>
+<button onclick="ir('p3')">SÍ →</button>
+</div>
+
+<!-- P3 VIDEO PRINCIPAL -->
+<div class="p" id="p3">
+
+<video id="video1" playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;">
+<source src="https://video.wixstatic.com/video/65b318_cb4798198f0c42f1bf04fbf5c4c0aa87/1080p/mp4/file.mp4">
+</video>
+
+<div id="btnNext" style="position:absolute;bottom:40px;">
+<button onclick="ir('p4')">CONTINUAR →</button>
+</div>
+
+</div>
+
+<!-- P4 -->
+<div class="p" id="p4">
+<h2>WhatsApp</h2>
+<button onclick="ir('p5')">ABRIR CHAT</button>
+</div>
+
+<!-- P5 -->
+<div class="p" id="p5">
+<h2>CHAT SIMULADO</h2>
+<button onclick="ir('p0')">REINICIAR</button>
+</div>
+
+<script>
+
+function ir(id){
+document.querySelectorAll('.p').forEach(p=>p.classList.remove('on'))
+document.getElementById(id).classList.add('on')
+
+if(id==="p1"){
+let v=document.getElementById("v5seg")
+v.currentTime=0
+v.muted=false
+v.volume=1
+v.play().catch(()=>{})
+setTimeout(()=>ir('p2'),6000)
+}
+
+if(id==="p3"){
+let v=document.getElementById("video1")
+v.currentTime=0
+v.muted=false
+v.volume=1
+
+let play=v.play()
+if(play!==undefined){play.catch(()=>{})}
+
+v.onended=function(){
+document.getElementById("btnNext").style.display="block"
+}
+
+setTimeout(()=>{
+document.getElementById("btnNext").style.display="block"
+},30000)
+}
+
+}
+
+</script>
+
+</body>
+</html>
+```
